@@ -1,0 +1,31 @@
+# ============================================
+# Sentinel Analysis Service — Test Configuration
+# Uses H2 in-memory database, no external infra
+# ============================================
+
+spring:
+  application:
+    name: sentinel-analysis-test
+  datasource:
+    url: jdbc:h2:mem:sentinel_test;DB_CLOSE_DELAY=-1;MODE=PostgreSQL;DATABASE_TO_LOWER=TRUE;DEFAULT_NULL_ORDERING=HIGH
+    driver-class-name: org.h2.Driver
+    username: sa
+    password: ""
+  jpa:
+    database-platform: org.hibernate.dialect.H2Dialect
+    hibernate:
+      ddl-auto: create-drop
+    show-sql: false
+  flyway:
+    enabled: false
+  kafka:
+    bootstrap-servers: localhost:9999
+    consumer:
+      auto-offset-reset: earliest
+  autoconfigure:
+    exclude: org.springframework.boot.autoconfigure.kafka.KafkaAutoConfiguration
+
+logging:
+  level:
+    com.sentinel: DEBUG
+    org.hibernate.SQL: WARN
