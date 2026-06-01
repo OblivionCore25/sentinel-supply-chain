@@ -18,8 +18,8 @@ integration-test: ## Run integration tests (requires Docker for Testcontainers)
 up: ## Start everything (all services + infrastructure)
 	docker compose up -d --build
 
-demo: ## Start everything with demo data seeder
-	SPRING_PROFILES_ACTIVE=demo docker compose up -d --build
+demo: ## Start everything with demo data seeder (3 projects + 12 CVEs)
+	docker compose -f docker-compose.yml -f docker-compose.demo.yml up -d --build
 
 down: ## Stop all containers
 	docker compose down

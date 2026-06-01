@@ -1,0 +1,18 @@
+# ============================================================
+# Sentinel — Docker Compose Demo Override
+# ============================================================
+# Usage:
+#   docker compose -f docker-compose.yml -f docker-compose.demo.yml up -d
+#
+# This activates the 'demo' Spring profile on the analysis
+# service, which runs the DemoDataSeeder on startup.
+# It populates the database with:
+#   - 3 sample projects (payment-api, web-portal, data-service)
+#   - 12 realistic vulnerability disclosures (CVE-2021-44228, etc.)
+#   - Risk scores and alerts computed via the real analysis pipeline
+# ============================================================
+
+services:
+  sentinel-analysis:
+    environment:
+      SPRING_PROFILES_ACTIVE: demo
