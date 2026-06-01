@@ -1,0 +1,22 @@
+# Development overrides — infrastructure only, no application containers.
+# Usage: docker compose -f docker-compose.yml -f docker-compose.dev.yml up -d
+#
+# Run backend services locally with: mvn spring-boot:run
+# Run frontend with: cd sentinel-dashboard && npm run dev
+
+services:
+  # Keep infrastructure services running
+  kafka:
+    ports:
+      - "9092:9092"
+      - "29092:29092"
+
+  # Expose debug ports when running services locally
+  sentinel-ingestion:
+    profiles: ["full"]   # Exclude from dev mode
+  sentinel-analysis:
+    profiles: ["full"]   # Exclude from dev mode
+  sentinel-notification:
+    profiles: ["full"]   # Exclude from dev mode
+  sentinel-dashboard:
+    profiles: ["full"]   # Exclude from dev mode

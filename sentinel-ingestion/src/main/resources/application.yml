@@ -1,0 +1,69 @@
+server:
+  port: ${SERVER_PORT:8081}
+
+spring:
+  application:
+    name: sentinel-ingestion
+
+  kafka:
+    bootstrap-servers: ${SPRING_KAFKA_BOOTSTRAP_SERVERS:localhost:29092}
+    producer:
+      acks: all
+      retries: 3
+      key-serializer: org.apache.kafka.common.serialization.StringSerializer
+      value-serializer: org.springframework.kafka.support.serializer.JsonSerializer
+      properties:
+        enable.idempotence: true
+        max.in.flight.requests.per.connection: 5
+        retry.backoff.ms: 1000
+        spring.json.add.type.headers: true
+
+  data:
+    redis:
+      host: ${SPRING_DATA_REDIS_HOST:localhost}
+      port: ${SPRING_DATA_REDIS_PORT:6379}
+
+  jackson:
+    serialization:
+      write-dates-as-timestamps: false
+
+# --- Sentinel-specific configuration ---
+sentinel:
+  ingestion:
+    nvd:
+      api-key: ${NVD_API_KEY:}
+      poll-interval: PT1H
+      request-delay-ms: 6000          # NVD recommends 6s between requests
+      base-url: https://services.nvd.nist.gov/rest/json/cves/2.0
+    osv:
+      poll-interval: PT30M
+      base-url: https://api.osv.dev/v1
+    github:
+      pat: ${GITHUB_PAT:}
+      webhook-secret: ${GITHUB_WEBHOOK_SECRET:}
+      poll-interval: PT2H
+      graphql-url: https://api.github.com/graphql
+    dedup:
+      ttl: PT24H                      # Ignore duplicate events within 24h
+
+# --- Apicurio Schema Registry ---
+apicurio:
+  registry:
+    url: ${APICURIO_REGISTRY_URL:http://localhost:8085/apis/registry/v3}
+
+# --- Actuator ---
+management:
+  endpoints:
+    web:
+      exposure:
+        include: health,info,metrics
+  endpoint:
+    health:
+      show-details: always
+      probes:
+        enabled: true
+  health:
+    kafka:
+      enabled: true
+    redis:
+      enabled: true
