@@ -540,7 +540,7 @@ a:hover {
 
 /* --- Page Transitions --- */
 .page-enter {
-  animation: fadeSlideIn 0.3s var(--transition-base) forwards;
+  animation: fadeSlideIn 0.3s cubic-bezier(0.4, 0, 0.2, 1) forwards;
 }
 
 @keyframes fadeSlideIn {

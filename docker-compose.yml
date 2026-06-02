@@ -82,7 +82,7 @@ services:
       POSTGRES_USER: ${POSTGRES_USER:-sentinel}
       POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:-sentinel_dev}
     ports:
-      - "${POSTGRES_PORT:-5432}:5432"
+      - "${POSTGRES_PORT:-15432}:5432"
     volumes:
       - postgres-data:/var/lib/postgresql/data
     healthcheck:
@@ -131,8 +131,8 @@ services:
 
   sentinel-ingestion:
     build:
-      context: ./sentinel-ingestion
-      dockerfile: Dockerfile
+      context: .
+      dockerfile: sentinel-ingestion/Dockerfile
     container_name: sentinel-ingestion
     environment:
       SPRING_PROFILES_ACTIVE: ${SPRING_PROFILES_ACTIVE:-default}
@@ -169,8 +169,8 @@ services:
 
   sentinel-analysis:
     build:
-      context: ./sentinel-analysis
-      dockerfile: Dockerfile
+      context: .
+      dockerfile: sentinel-analysis/Dockerfile
     container_name: sentinel-analysis
     environment:
       SPRING_PROFILES_ACTIVE: ${SPRING_PROFILES_ACTIVE:-default}
@@ -206,8 +206,8 @@ services:
 
   sentinel-notification:
     build:
-      context: ./sentinel-notification
-      dockerfile: Dockerfile
+      context: .
+      dockerfile: sentinel-notification/Dockerfile
     container_name: sentinel-notification
     environment:
       SPRING_PROFILES_ACTIVE: ${SPRING_PROFILES_ACTIVE:-default}

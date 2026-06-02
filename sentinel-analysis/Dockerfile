@@ -2,12 +2,20 @@
 FROM eclipse-temurin:21-jdk-alpine AS build
 WORKDIR /workspace
 
-COPY ../pom.xml /workspace/pom.xml
-COPY ../sentinel-common/pom.xml /workspace/sentinel-common/pom.xml
-COPY pom.xml /workspace/sentinel-analysis/pom.xml
+# Copy parent POM and ALL module POMs (Maven validates the full reactor)
+COPY pom.xml /workspace/pom.xml
+COPY sentinel-common/pom.xml /workspace/sentinel-common/pom.xml
+COPY sentinel-ingestion/pom.xml /workspace/sentinel-ingestion/pom.xml
+COPY sentinel-analysis/pom.xml /workspace/sentinel-analysis/pom.xml
+COPY sentinel-notification/pom.xml /workspace/sentinel-notification/pom.xml
 
-COPY ../sentinel-common/src /workspace/sentinel-common/src
-COPY src /workspace/sentinel-analysis/src
+# Create empty src dirs for modules we won't build (satisfies Maven reactor)
+RUN mkdir -p /workspace/sentinel-ingestion/src/main/java \
+             /workspace/sentinel-notification/src/main/java
+
+# Copy source code only for modules we build
+COPY sentinel-common/src /workspace/sentinel-common/src
+COPY sentinel-analysis/src /workspace/sentinel-analysis/src
 
 RUN apk add --no-cache maven && \
     cd /workspace && \
